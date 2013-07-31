@@ -1,0 +1,3 @@
+TODO: adapt these commands to the TEK scope instead of the Rigol scopes. Should be a matter of swapping around the GPIB commands.
+
+As of 7-31 I've replaced all the commands with the appropriate TEK commands. Still need to test, but the GPIB commands are those listed in the manual.
