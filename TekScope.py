@@ -9,17 +9,10 @@ import instrument
 # Add command line options:
 from optparse import OptionParser
 
-parser = OptionParser()
-parser.add_optiln("-1", "--channel1", dest="ch1",
-                  help="Get data from channel 1", default=False, action="store_true")
-parser.add_optiln("-2", "--channel2", dest="ch2",
-                  help="Get data from channel 2", default=False, action="store_true")
-parser.add_optiln("-r1", "--ref1", dest="ref1",
-                  help="Get data from ref 1", default=False, action="store_true")
-parser.add_optiln("-r2", "--ref2", dest="ref2",
-                  help="Get data from ref 2", default=False, action="store_true")
-
-(options, args) = parser.parse_args()
+ch1 = 0
+ch2 = 0
+ref1 = 0
+ref1 = 0
 
 def read_data():
 	""" Function for reading data and parsing binary into numpy array """
@@ -45,22 +38,15 @@ test.write("DATA:ENCD SRI")
 
 #TODO: replace with automatic selection using command:
 # SELECT? returns SELECT:CH1 0;CH2 1;MATH 1;REFA 0;REFB 1
-if ch1:
-	# Grab the data from channel 1
-	test.write("DATA:SOURCE CH1")
-	ch1data = read_data()
- 
-if ch2:
-	test.write("DATA:SOURCE CH2")
-	ch2data = read_data() 
 
-if ref1:
-	test.write("DATA:SOURCE REF1")
-	ref1data = read_data()
+# Grab the data from channel 1
 
-if ref2:
-	test.write("DATA:SOURCE REF2")
-	ref2data = read_data()
+test.write("DATA:SOURCE CH1")
+ch1data = read_data()
+
+test.write("DATA:SOURCE CH2")
+ch2data = read_data() 
+
 
 # Get the voltage scale
 test.write("CH1:SCALE?")
@@ -98,20 +84,24 @@ time_size = int(test.read(30))
 # Now, generate a time axis.  The scope display range is 0-600, with 300 being
 # time zero.
 #time = numpy.arange(-300.0/50*timescale, 300.0/50*timescale, timescale/50.0)
-time = numpy.arange(time_size)
+#time = numpy.arange(time_size)
 
-time = time / time_size * timescale * 10
-
+#time = time / time_size * timescale * 10
+time = numpy.arange(0,timescale*10,timescale*10/time_size)
  
 # Start data acquisition again, and put the scope back in local mode
 test.write("ACQ:STATE RUN")
 test.write("UNLOCK ALL")
 
 # Plot the data
+plot.subplot(2,1,1)
 plot.plot(time,ch1data)
+plot.subplot(2,1,2)
 plot.plot(time,ch2data)
 plot.title("Oscilloscope Channel 1&2")
 plot.ylabel("Voltage (V)")
 plot.xlabel("Time (S)")
 #plot.xlim(time[0], time[599]
 plot.show()
+
+# TODO add file save to this script
