@@ -1,4 +1,5 @@
 import os
+import time
 
 class usbtmc:
     """Simple implementation of a USBTMC device driver, in the style of visa.h"""
@@ -57,6 +58,7 @@ class RigolDG:
     def write(self, command):
         """Send an arbitrary command directly to the scope"""
         self.meas.write(command)
+        time.sleep(0.1)
 
     def read(self, command):
         """Read an arbitrary amount of data directly from the scope"""
