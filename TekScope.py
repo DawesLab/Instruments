@@ -19,7 +19,6 @@ def read_data():
 	# we'll assume a 5000-byte transmission so the string would be "#45000" and we therefor strip 6 bytes.
 	return numpy.frombuffer(rawdata[6:-1], 'i2')
 
-
 # Initialize our scope
 test = instrument.TekScope1000("/dev/usbtmc0")
 
@@ -32,9 +31,11 @@ test.write("DATA:WIDTH 2")
 # Set data format to binary, zero is center-frame and big endian
 test.write("DATA:ENCD SRI")
 
-# Find out what is displayed:
+# Find out what is displayed on the scope:
+# "wfms" is a string with 1 or 0 for CH1,CH2,MATH,REFA,REFB
 test.write("SELECT?")
 wfms = test.read(20)
+# parse into array of characters
 wfms = wfms.strip().split(";")
 
 # Grab the data from channel 1
@@ -57,9 +58,6 @@ if wfms[0]=="1":
 
     ch1data = ((ch1data - yoff) * ymult) + yzero
 
-
-
-
 if wfms[1]=="1":
     test.write("DATA:SOURCE CH2")
     ch2data = read_data()
@@ -78,6 +76,29 @@ if wfms[1]=="1":
 
     ch2data = ((ch2data - yoff) * ymult) + yzero
 
+def get_data(source):
+    """
+    Get scaled data from source where source is one of
+    CH1,CH2,REFA,REFB
+    """
+
+    test.write("DATA:SOURCE" + source)
+    data = read_data()
+
+    # Get the voltage scale
+    test.write("WFMP:" + source + ":YMULT?")
+    ymult = float(test.read(20))
+
+    # And the voltage offset
+    test.write("WFMP:" + source + ":YOFF?")
+    yoff = float(test.read(20))
+
+    # And the voltage zero
+    test.write("WFMP:" + source + ":YZERO?")
+    yzero = float(test.read(20))
+
+    data = ((data - yoff) * ymult) + yzero
+    return data
 
 
 
@@ -98,7 +119,6 @@ if wfms[3]=="1":
     yzero = float(test.read(20))
 
     refAdata = ((refAdata - yoff) * ymult) + yzero
-
 
 
 if wfms[4]=="1":
