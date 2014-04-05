@@ -46,7 +46,7 @@ class TekScope1000:
         """Reset the instrument"""
         self.meas.sendReset()
 
-    def read_data():
+    def read_data(self):
         """ Function for reading data and parsing binary into numpy array """
         self.write("CURV?")
         rawdata = self.read(9000)
@@ -58,14 +58,14 @@ class TekScope1000:
         return numpy.frombuffer(rawdata[6:-1], 'i2')
 
 
-    def get_data(source):
+    def get_data(self,source):
         """
         Get scaled data from source where source is one of
         CH1,CH2,REFA,REFB
         """
 
         self.write("DATA:SOURCE" + source)
-        data = read_data()
+        data = self.read_data()
 
         # Get the voltage scale
         self.write("WFMP:" + source + ":YMULT?")
