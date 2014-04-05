@@ -23,8 +23,10 @@ class Window(QtGui.QDialog):
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         # Just some button connected to `plot` method
-        self.button = QtGui.QPushButton('Plot')
-        self.button.clicked.connect(self.plot)
+        self.plotbutton = QtGui.QPushButton('Plot Data')
+        self.plotbutton.clicked.connect(self.plot)
+
+        # ComboBox for ch select?
 
         # set the layout
         layout = QtGui.QVBoxLayout()
