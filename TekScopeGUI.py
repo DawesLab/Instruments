@@ -22,7 +22,7 @@ from matplotlib.backends.backend_wxagg import \
     NavigationToolbar2WxAgg as NavigationToolbar
 
 
-class BarsFrame(wx.Frame):
+class ScopeFrame(wx.Frame):
     """ The main frame of the application
     """
     title = 'Tektronix scope download'
@@ -30,13 +30,12 @@ class BarsFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1, self.title)
         
-        self.data = [5, 6, 9, 14]
+        self.data = [0, 0, 0, 0, 0]
         
         self.create_menu()
         self.create_status_bar()
         self.create_main_panel()
         
-        self.textbox.SetValue(' '.join(map(str, self.data)))
         self.draw_figure()
 
     def create_menu(self):
@@ -79,16 +78,6 @@ class BarsFrame(wx.Frame):
         #
         self.axes = self.fig.add_subplot(111)
         
-        # Bind the 'pick' event for clicking on one of the bars
-        #
-        #self.canvas.mpl_connect('pick_event', self.on_pick)
-        
-        self.textbox = wx.TextCtrl(
-            self.panel, 
-            size=(200,-1),
-            style=wx.TE_PROCESS_ENTER)
-        self.Bind(wx.EVT_TEXT_ENTER, self.on_text_enter, self.textbox)
-        
         self.ch1button = wx.Button(self.panel, -1, "CH1")
         self.Bind(wx.EVT_BUTTON, self.on_ch1_button, self.ch1button)
 
@@ -121,7 +110,6 @@ class BarsFrame(wx.Frame):
         
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
         flags = wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL
-        self.hbox.Add(self.textbox, 0, border=3, flag=flags)
         self.hbox.Add(self.ch1button, 0, border=3, flag=flags)
         self.hbox.Add(self.ch2button, 0, border=3, flag=flags)
         self.hbox.Add(self.refabutton, 0, border=3, flag=flags)
@@ -140,38 +128,34 @@ class BarsFrame(wx.Frame):
     def draw_figure(self):
         """ Redraws the figure
         """
-        str = self.textbox.GetValue()
-        self.data = map(int, str.split())
-        x = range(len(self.data))
+        #str = "5 2 7 3"
+        #self.data = map(int, str.split())
 
         # clear the axes and redraw the plot anew
         #
         self.axes.clear()        
         self.axes.grid(self.cb_grid.IsChecked())
         
-        self.axes.bar(
-            left=x, 
-            height=self.data, 
-            width= 40.0 / 100.0, 
-            align='center', 
-            alpha=0.44,
-            picker=5)
-        
+        self.axes.plot(self.data) 
         self.canvas.draw()
     
     def on_cb_grid(self, event):
         self.draw_figure()
     
     def on_ch1_button(self, event):
+	self.data = [1, 2, 1, 2]
         self.draw_figure()
     
     def on_ch2_button(self, event):
+	self.data = [2, 2, 1, 2]
         self.draw_figure()
     
     def on_refa_button(self, event):
+	self.data = [3, 2, 1, 2]
         self.draw_figure()
     
     def on_refb_button(self, event):
+	self.data = [4, 2, 1, 2]
         self.draw_figure()
     
     def on_text_enter(self, event):
@@ -222,7 +206,7 @@ class BarsFrame(wx.Frame):
 
 if __name__ == '__main__':
     app = wx.PySimpleApp()
-    app.frame = BarsFrame()
+    app.frame = ScopeFrame()
     app.frame.Show()
     app.MainLoop()
 
