@@ -29,7 +29,6 @@ class ScopeFrame(wx.Frame):
     """ The main frame of the application
     """
     title = 'Tektronix scope download'
-    inst = instrument.TekScope1000("/dev/usbtmc0")
 
     def __init__(self):
         wx.Frame.__init__(self, None, -1, self.title)
@@ -132,11 +131,8 @@ class ScopeFrame(wx.Frame):
     def draw_figure(self):
         """ Redraws the figure
         """
-        #str = "5 2 7 3"
-        #self.data = map(int, str.split())
 
         # clear the axes and redraw the plot anew
-        #
         self.axes.clear()
         self.axes.grid(self.cb_grid.IsChecked())
 
