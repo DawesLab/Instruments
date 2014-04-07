@@ -1,16 +1,15 @@
 """
-This demo demonstrates how to embed a matplotlib (mpl) plot
-into a PyQt4 GUI application, including:
+This code loads data from a Tektronix scope into a 
+matplotlib (mpl) plot. Available features:
 
-* Using the navigation toolbar
-* Adding data to the plot
-* Dynamically modifying the plot's properties
-* Processing mpl events
-* Saving the plot to a file from a menu
+    * Using the navigation toolbar in the plot
+    * Select a channel to view or save
+    * Saving the data to a numpy (*.npy) file from the menu
 
-The main goal is to serve as a basis for developing rich PyQt GUI
-applications featuring mpl plots (using the mpl OO API).
+Written by:
+Andrew M.C. Dawes (dawes@pacificu.edu)
 
+Based on demo written by:
 Eli Bendersky (eliben@gmail.com)
 License: this code is in the public domain
 Last modified: 19.01.2009
@@ -27,6 +26,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
 
+#Use our instrument library for USBTMC communications
 import instrument
 import numpy
 
@@ -53,9 +53,9 @@ class AppForm(QMainWindow):
 
     def on_about(self):
         msg = """ View and save data from Tektronix scope:
-        * Use the matplotlib navigation bar
+        * Using the navigation toolbar in the plot
         * Select a channel to view or save
-        * Save the data to a file using the File menu
+        * Saving the data to a numpy (*.npy) file from the menu
         """
         QMessageBox.about(self, "About this code", msg.strip())
 
@@ -207,5 +207,5 @@ def main():
 
 
 if __name__ == "__main__":
-    inst = instrument.TekScope1000("/dev/usbtmc0")
+    #inst = instrument.TekScope1000("/dev/usbtmc0")
     main()
