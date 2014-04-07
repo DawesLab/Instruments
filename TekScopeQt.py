@@ -61,18 +61,22 @@ class AppForm(QMainWindow):
 
     def on_ch1(self):
         self.data = inst.get_data("CH1")
+        self.statusBar().showMessage('Data from CH1', 3000)
         self.on_draw()
 
     def on_ch2(self):
         self.data = inst.get_data("CH2")
+        self.statusBar().showMessage('Data from CH2', 3000)
         self.on_draw()
 
     def on_refa(self):
         self.data = inst.get_data("REFA")
+        self.statusBar().showMessage('Data from REFA', 3000)
         self.on_draw()
 
     def on_refb(self):
         self.data = inst.get_data("REFB")
+        self.statusBar().showMessage('Data from REFB', 3000)
         self.on_draw()
 
     def on_draw(self):
@@ -110,10 +114,6 @@ class AppForm(QMainWindow):
 
         # Other GUI controls
         #
-        self.textbox = QLineEdit()
-        self.textbox.setMinimumWidth(200)
-        self.connect(self.textbox, SIGNAL('editingFinished ()'), self.on_draw)
-
         self.ch1_button = QPushButton("&CH1")
         self.connect(self.ch1_button, SIGNAL('clicked()'), self.on_ch1)
 
@@ -152,7 +152,7 @@ class AppForm(QMainWindow):
         self.setCentralWidget(self.main_frame)
 
     def create_status_bar(self):
-        self.status_text = QLabel("This is a demo")
+        self.status_text = QLabel("Connected to %s" % inst.name())
         self.statusBar().addWidget(self.status_text, 1)
 
     def create_menu(self):
