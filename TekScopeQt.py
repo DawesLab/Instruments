@@ -35,8 +35,8 @@ class AppForm(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle('Tektronix scope data')
-        self.data = [0, 0, 0, 0, 0]
         self.xdata = inst.get_xdata()
+        self.data = self.xdata
         self.create_menu()
         self.create_main_frame()
         self.create_status_bar()
