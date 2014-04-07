@@ -1,5 +1,6 @@
 import os
 import time
+import numpy
 
 class usbtmc:
     """Simple implementation of a USBTMC device driver, in the style of visa.h"""
@@ -44,6 +45,42 @@ class TekScope1000:
     def reset(self):
         """Reset the instrument"""
         self.meas.sendReset()
+
+    def read_data(self):
+        """ Function for reading data and parsing binary into numpy array """
+        self.write("CURV?")
+        rawdata = self.read(9000)
+
+        # First few bytes are characters to specify
+        # the length of the transmission. Need to strip these off:
+        # we'll assume a 5000-byte transmission
+        # so the string would be "#45000" and we therefor strip 6 bytes.
+        return numpy.frombuffer(rawdata[6:-1], 'i2')
+
+
+    def get_data(self,source):
+        """
+        Get scaled data from source where source is one of
+        CH1,CH2,REFA,REFB
+        """
+
+        self.write("DATA:SOURCE " + source)
+        data = self.read_data()
+
+        # Get the voltage scale
+        self.write("WFMP:" + source + ":YMULT?")
+        ymult = float(self.read(20))
+
+        # And the voltage offset
+        self.write("WFMP:" + source + ":YOFF?")
+        yoff = float(self.read(20))
+
+        # And the voltage zero
+        self.write("WFMP:" + source + ":YZERO?")
+        yzero = float(self.read(20))
+
+        data = ((data - yoff) * ymult) + yzero
+        return data
 
 
 class RigolDG:
