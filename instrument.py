@@ -64,7 +64,7 @@ class TekScope1000:
         CH1,CH2,REFA,REFB
         """
 
-        self.write("DATA:SOURCE" + source)
+        self.write("DATA:SOURCE " + source)
         data = self.read_data()
 
         # Get the voltage scale
