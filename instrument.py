@@ -82,6 +82,25 @@ class TekScope1000:
         data = ((data - yoff) * ymult) + yzero
         return data
 
+    def get_xdata(self):
+        """Method to get the horizontal data array from a scope"""
+        # Get the timescale
+        self.write("HORIZONTAL:MAIN:SCALE?")
+        timescale = float(self.read(20))
+
+        # Get the timescale offset
+        self.write("HORIZONTAL:MAIN:POSITION?")
+        timeoffset = float(self.read(20))
+
+        # Get the length of the horizontal record
+        self.write("HORIZONTAL:RECORDLENGTH?")
+        time_size = int(self.read(30))
+
+        time = numpy.arange(0,timescale*10,timescale*10/time_size)
+        return time
+
+
+
 
 class RigolDG:
     """Class to control a Rigol DG4102 arb wave generator."""

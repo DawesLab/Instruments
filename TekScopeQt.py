@@ -36,6 +36,7 @@ class AppForm(QMainWindow):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle('Tektronix scope data')
         self.data = [0, 0, 0, 0, 0]
+        self.xdata = inst.get_xdata()
         self.create_menu()
         self.create_main_frame()
         self.create_status_bar()
@@ -87,7 +88,7 @@ class AppForm(QMainWindow):
         self.axes.clear()
         self.axes.grid(self.grid_cb.isChecked())
         # TODO: scale x data correctly
-        self.axes.plot(self.data)
+        self.axes.plot(self.xdata,self.data)
         self.canvas.draw()
 
     def create_main_frame(self):
