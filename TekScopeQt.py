@@ -1,5 +1,5 @@
 """
-This code loads data from a Tektronix scope into a 
+This code loads data from a Tektronix scope into a
 matplotlib (mpl) plot. Available features:
 
     * Using the navigation toolbar in the plot
@@ -152,7 +152,7 @@ class AppForm(QMainWindow):
         self.setCentralWidget(self.main_frame)
 
     def create_status_bar(self):
-        self.status_text = QLabel("Connected to %s" % inst.name())
+        self.status_text = QLabel("Connected to %s" % inst.name)
         self.statusBar().addWidget(self.status_text, 1)
 
     def create_menu(self):
@@ -207,5 +207,5 @@ def main():
 
 
 if __name__ == "__main__":
-    #inst = instrument.TekScope1000("/dev/usbtmc0")
+    inst = instrument.TekScope1000("/dev/usbtmc0")
     main()
