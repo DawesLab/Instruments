@@ -43,7 +43,7 @@ class AppForm(QMainWindow):
         self.on_draw()
 
     def save_plot(self):
-        file_choices = "Numpy (*.npy)|*.npy"
+        file_choices = "Numpy (*.npy)"
 
         path, filt = QFileDialog.getSaveFileName(self,
                         'Save file', filter=file_choices)
