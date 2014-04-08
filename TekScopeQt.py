@@ -44,12 +44,12 @@ class AppForm(QMainWindow):
         self.on_draw()
 
     def save_plot(self):
-        file_choices = "Numpy (*.npy)"
+        file_choices = "Numpyz (*.npz)"
 
         path, filt = QFileDialog.getSaveFileName(self,
                         'Save file', filter=file_choices)
         if path:
-            numpy.save(path, self.data)
+            numpy.savez(path, x=self.xdata, y=self.data)
             self.statusBar().showMessage('Saved data to %s' % path, 2000)
 
     def on_about(self):

@@ -3,43 +3,6 @@ import numpy
 import matplotlib.pyplot as plot
 import instrument
 
-""" Program to plot the Y-T data from selected channels."""
-
-# Add command line options:
-from optparse import OptionParser
-
-def read_data():
-	""" Function for reading data and parsing binary into numpy array """
-	test.write("CURV?")
-	rawdata = test.read(9000)
-
-	# First few bytes are characters to specify the length of the transmission. Need to strip these off:
-	# we'll assume a 5000-byte transmission so the string would be "#45000" and we therefor strip 6 bytes.
-	return numpy.frombuffer(rawdata[6:-1], 'i2')
-
-def get_data(source):
-    """
-    Get scaled data from source where source is one of
-    CH1,CH2,REFA,REFB
-    """
-
-    test.write("DATA:SOURCE" + source)
-    data = read_data()
-
-    # Get the voltage scale
-    test.write("WFMP:" + source + ":YMULT?")
-    ymult = float(test.read(20))
-
-    # And the voltage offset
-    test.write("WFMP:" + source + ":YOFF?")
-    yoff = float(test.read(20))
-
-    # And the voltage zero
-    test.write("WFMP:" + source + ":YZERO?")
-    yzero = float(test.read(20))
-
-    data = ((data - yoff) * ymult) + yzero
-    return data
 
 if __name__ == "__main__":
 
@@ -64,16 +27,16 @@ if __name__ == "__main__":
     wfms = wfms.strip().split(";")
 
     if wfms[0]=="1":
-        ch1data = get_data("CH1")
+        ch1data = test.get_data("CH1")
 
     if wfms[1]=="1":
-        ch2data = get_data("CH2")
+        ch2data = test.get_data("CH2")
 
     if wfms[3]=="1":
-        refAdata = get_data("REFA")
+        refAdata = test.get_data("REFA")
 
     if wfms[4]=="1":
-        refBdata = get_data("REFB")
+        refBdata = test.get_data("REFB")
 
     # Get the timescale
     test.write("HORIZONTAL:MAIN:SCALE?")
@@ -94,7 +57,7 @@ if __name__ == "__main__":
     #test.write("UNLOCK ALL")
 
     # Plot the data
-    if ch1data.any():
+    if wfms[0]=="1":
         plot.subplot(4,1,1)
         plot.plot(time,ch1data)
     if wfms[1]=="1":
