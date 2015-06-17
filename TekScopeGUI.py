@@ -205,10 +205,9 @@ class ScopeFrame(wx.Frame):
 if __name__ == '__main__':
     inst = instrument.TekScope1000("/dev/usbtmc0")
 
-    app = wx.PySimpleApp()
+    app = wx.App(False)
     app.frame = ScopeFrame()
     app.frame.Show()
 
 
     app.MainLoop()
-
