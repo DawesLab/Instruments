@@ -12,7 +12,7 @@ class usbtmc:
         # TODO: Test that the file opened
 
     def write(self, command):
-        os.write(self.FILE, command);
+        os.write(self.FILE, command.encode('utf-8'));
 
     def read(self, length = 4000):
         return os.read(self.FILE, length)
@@ -32,15 +32,15 @@ class TekScope1000:
 
         self.name = self.meas.getName()
 
-        print self.name
+        print(self.name)
 
     def write(self, command):
         """Send an arbitrary command directly to the scope"""
         self.meas.write(command)
 
-    def read(self, command):
+    def read(self, length = 4000):
         """Read an arbitrary amount of data directly from the scope"""
-        return self.meas.read(command)
+        return self.meas.read(length)
 
     def reset(self):
         """Reset the instrument"""
@@ -109,7 +109,7 @@ class RigolDG:
 
         self.name = self.meas.getName()
 
-        print self.name
+        print(self.name)
 
     def write(self, command):
         """Send an arbitrary command directly to the scope"""
@@ -123,6 +123,3 @@ class RigolDG:
     def reset(self):
         """Reset the instrument"""
         self.meas.sendReset()
-
-
-
