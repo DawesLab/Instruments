@@ -103,14 +103,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         def on_ch1():
             ''' Chan1 button is clicked. '''
             print('ch1 clicked')
-            dc.channel = "CH1"
+            self.dc.channel = "CH1"
             self.statusBar().showMessage("Channel 1")
 
         @pyqtSlot()
         def on_ch2():
             ''' Chan2 button is clicked. '''
             print('ch2 clicked')
-            dc.channel = "CH2"
+            self.dc.channel = "CH2"
             self.statusBar().showMessage("Channel 2")
 
         @pyqtSlot()
@@ -118,14 +118,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             ''' Ref1 button is clicked. '''
             print('ref1 clicked')
             #TODO: check for available channel
-            dc.channel = "REF1"
+            self.dc.channel = "REF1"
             self.statusBar().showMessage("Reference 1")
 
         @pyqtSlot()
         def on_ref2():
             ''' Ref2 button is clicked. '''
             print('ref2 clicked')
-            dc.channel = "REF2"
+            self.dc.channel = "REF2"
             self.statusBar().showMessage("Reference 2")
 
         @pyqtSlot()
