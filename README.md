@@ -10,7 +10,8 @@ Requirements:
 
 matplotlib
 numpy
-python-usbtmc (installed with pip)
+wxgtk (installed for instance from `sudo apt-get install python-wxgtk3.0`)
+python-usbtmc (installed with `pip`)
 pypi.python.org/pypi/python-usbtmc
 
 
