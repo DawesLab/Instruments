@@ -96,7 +96,7 @@ class TekScope1000:
         self.write("HORIZONTAL:RECORDLENGTH?")
         time_size = int(self.read(30))
 
-        time = numpy.arange(0,timescale*10,timescale*10/time_size)
+        time = numpy.arange(0,timescale*10,timescale*10/time_size*2) # For some reason the output was too short compared to the data buffer
         return time
 
 

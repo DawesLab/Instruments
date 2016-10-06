@@ -34,7 +34,8 @@ class ScopeFrame(wx.Frame):
         wx.Frame.__init__(self, None, -1, self.title)
 
         self.data = [0, 0, 0, 0, 0]
-
+        self.xdata = range(len(self.data))
+        
         self.create_menu()
         self.create_status_bar()
         self.create_main_panel()
@@ -45,8 +46,10 @@ class ScopeFrame(wx.Frame):
         self.menubar = wx.MenuBar()
 
         menu_file = wx.Menu()
-        m_expt = menu_file.Append(-1, "&Save data\tCtrl-S", "Save data to file")
+        m_expt = menu_file.Append(-1, "&Save data to Numpy\tCtrl-S", "Save data to Numpy file")
         self.Bind(wx.EVT_MENU, self.on_save_data, m_expt)
+        m_expt = menu_file.Append(-1, "&Save data to CSV\tCtrl-Shift-S", "Save data to CSVfile")
+        self.Bind(wx.EVT_MENU, self.on_save_data_csv, m_expt)
         menu_file.AppendSeparator()
         m_exit = menu_file.Append(-1, "E&xit\tCtrl-X", "Exit")
         self.Bind(wx.EVT_MENU, self.on_exit, m_exit)
@@ -87,6 +90,13 @@ class ScopeFrame(wx.Frame):
         self.ch2button = wx.Button(self.panel, -1, "CH2")
         self.Bind(wx.EVT_BUTTON, self.on_ch2_button, self.ch2button)
 
+        self.ch3button = wx.Button(self.panel, -1, "CH3")
+        self.Bind(wx.EVT_BUTTON, self.on_ch3_button, self.ch3button)
+
+        self.ch4button = wx.Button(self.panel, -1, "CH4")
+        self.Bind(wx.EVT_BUTTON, self.on_ch4_button, self.ch4button)
+
+        
         self.refabutton = wx.Button(self.panel, -1, "RefA")
         self.Bind(wx.EVT_BUTTON, self.on_refa_button, self.refabutton)
 
@@ -115,6 +125,8 @@ class ScopeFrame(wx.Frame):
         flags = wx.ALIGN_LEFT | wx.ALL | wx.ALIGN_CENTER_VERTICAL
         self.hbox.Add(self.ch1button, 0, border=3, flag=flags)
         self.hbox.Add(self.ch2button, 0, border=3, flag=flags)
+        self.hbox.Add(self.ch3button, 0, border=3, flag=flags)
+        self.hbox.Add(self.ch4button, 0, border=3, flag=flags)
         self.hbox.Add(self.refabutton, 0, border=3, flag=flags)
         self.hbox.Add(self.refbbutton, 0, border=3, flag=flags)
         self.hbox.Add(self.cb_grid, 0, border=3, flag=flags)
@@ -131,12 +143,12 @@ class ScopeFrame(wx.Frame):
     def draw_figure(self):
         """ Redraws the figure
         """
-
+        
         # clear the axes and redraw the plot anew
         self.axes.clear()
         self.axes.grid(self.cb_grid.IsChecked())
 
-        self.axes.plot(self.data)
+        self.axes.plot([i*1000 for i in self.xdata], self.data)
         self.canvas.draw()
 
     def on_cb_grid(self, event):
@@ -144,18 +156,32 @@ class ScopeFrame(wx.Frame):
 
     def on_ch1_button(self, event):
         self.data = inst.get_data("CH1")
+        self.xdata = inst.get_xdata()
         self.draw_figure()
 
     def on_ch2_button(self, event):
         self.data = inst.get_data("CH2")
+        self.xdata = inst.get_xdata()
         self.draw_figure()
 
+    def on_ch3_button(self, event):
+        self.data = inst.get_data("CH3")
+        self.xdata = inst.get_xdata()
+        self.draw_figure()
+
+    def on_ch4_button(self, event):
+        self.data = inst.get_data("CH4")
+        self.xdata = inst.get_xdata()
+        self.draw_figure()
+        
     def on_refa_button(self, event):
         self.data = inst.get_data("REFA")
+        self.xdata = inst.get_xdata()
         self.draw_figure()
 
     def on_refb_button(self, event):
         self.data = inst.get_data("REFB")
+        self.xdata = inst.get_xdata()
         self.draw_figure()
 
     def on_save_data(self, event):
@@ -172,9 +198,30 @@ class ScopeFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             #self.canvas.print_figure(path, dpi=self.dpi)
-            numpy.save(path, self.data)
+            numpy.save(path, (self.xdata, self.data))
             self.flash_status_message("Data saved to %s" % path)
 
+    def on_save_data_csv(self, event):
+        file_choices = "CSV (*.csv)|*.csv"
+
+        dlg = wx.FileDialog(
+            self,
+            message="Save data as...",
+            defaultDir=os.getcwd(),
+            defaultFile="data",
+            wildcard=file_choices,
+            style=wx.SAVE)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            #self.canvas.print_figure(path, dpi=self.dpi)
+            out = numpy.zeros((len(self.data), 2))
+            for (i,l) in enumerate(zip(self.xdata, self.data)):
+                out[i,:] = l
+            numpy.savetxt(path, out)
+            self.flash_status_message("Data saved to %s" % path)
+
+            
     def on_exit(self, event):
         self.Destroy()
 
