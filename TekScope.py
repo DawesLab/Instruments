@@ -22,9 +22,12 @@ if __name__ == "__main__":
     # Find out what is displayed on the scope:
     # "wfms" is a string with 1 or 0 for CH1,CH2,MATH,REFA,REFB
     test.write("SELECT?")
-    wfms = test.read(20)
+    wfms_bytes = test.read(20)
     # parse into array of characters
-    wfms = wfms.strip().split(";")
+    print(wfms_bytes)
+    wfms_string = wfms_bytes.decode("utf-8")
+    wfms = wfms_string.strip().split(";")
+    print(wfms[0])
 
     if wfms[0]=="1":
         ch1data = test.get_data("CH1")
@@ -77,4 +80,11 @@ if __name__ == "__main__":
     plot.show()
     #plot.savefig("test.png")
 
-    # TODO add file save to this script
+    if 'ch1data' in vars():
+        numpy.save("ch1.npy",ch1data)
+    if 'ch2data' in vars():
+        numpy.save("ch2.npy",ch2data)
+    if 'refAdata' in vars():
+        numpy.save("refA.npy",refAdata)
+    if 'refBdata' in vars():
+        numpy.save("refB.npy",refBdata)

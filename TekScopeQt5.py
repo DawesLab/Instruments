@@ -1,14 +1,8 @@
 #!/usr/bin/env python
 
+# AMCDawes 2016 plotting Tektronix scope output. Based on the example:
 # embedding_in_qt5.py --- Simple Qt5 application embedding matplotlib canvases
 #
-# Copyright (C) 2005 Florent Rougon
-#               2006 Darren Dale
-#               2015 Jens H Nielsen
-#
-# This file is an example program for matplotlib. It may be used and
-# modified with no restriction; raw copies as well as modified versions
-# may be distributed without limitation.
 
 from __future__ import unicode_literals
 import sys
@@ -186,6 +180,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         path, filt = QtWidgets.QFileDialog.getSaveFileName(self,
                         'Save file', filter=file_choices)
+
         if path:
             numpy.savez(path, x=self.dc.xdata, y=self.dc.data)
             self.statusBar().showMessage('Saved data to %s' % path, 2000)
@@ -197,19 +192,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.fileQuit()
 
     def about(self):
-        QtGui.QMessageBox.about(self, "About",
-                                """embedding_in_qt5.py example
-Copyright 2005 Florent Rougon, 2006 Darren Dale, 2015 Jens H Nielsen
-
-This program is a simple example of a Qt5 application embedding matplotlib
-canvases.
-
-It may be used and modified with no restriction; raw copies as well as
-modified versions may be distributed without limitation.
-
-This is modified from the embedding in qt4 example to show the difference
-between qt4 and qt5"""
-                                )
+        QtWidgets.QMessageBox.about(self,"About","Stuff")
 
 def main():
     qApp = QtWidgets.QApplication(sys.argv)
