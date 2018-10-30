@@ -35,7 +35,7 @@ class ScopeFrame(wx.Frame):
 
         self.data = [0, 0, 0, 0, 0]
         self.xdata = range(len(self.data))
-        
+
         self.create_menu()
         self.create_status_bar()
         self.create_main_panel()
@@ -96,7 +96,7 @@ class ScopeFrame(wx.Frame):
         self.ch4button = wx.Button(self.panel, -1, "CH4")
         self.Bind(wx.EVT_BUTTON, self.on_ch4_button, self.ch4button)
 
-        
+
         self.refabutton = wx.Button(self.panel, -1, "RefA")
         self.Bind(wx.EVT_BUTTON, self.on_refa_button, self.refabutton)
 
@@ -110,15 +110,15 @@ class ScopeFrame(wx.Frame):
 
         # Create the navigation toolbar, tied to the canvas
         #
-        self.toolbar = NavigationToolbar(self.canvas)
-
+        #self.toolbar = NavigationToolbar(self.canvas)
+        #self.toolbar.Realize()
         #
         # Layout with box sizers
         #
 
         self.vbox = wx.BoxSizer(wx.VERTICAL)
         self.vbox.Add(self.canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
-        self.vbox.Add(self.toolbar, 0, wx.EXPAND)
+        #self.vbox.Add(self.toolbar, 0, wx.EXPAND)
         self.vbox.AddSpacer(10)
 
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -143,7 +143,7 @@ class ScopeFrame(wx.Frame):
     def draw_figure(self):
         """ Redraws the figure
         """
-        
+
         # clear the axes and redraw the plot anew
         self.axes.clear()
         self.axes.grid(self.cb_grid.IsChecked())
@@ -173,7 +173,7 @@ class ScopeFrame(wx.Frame):
         self.data = inst.get_data("CH4")
         self.xdata = inst.get_xdata()
         self.draw_figure()
-        
+
     def on_refa_button(self, event):
         self.data = inst.get_data("REFA")
         self.xdata = inst.get_xdata()
@@ -193,7 +193,7 @@ class ScopeFrame(wx.Frame):
             defaultDir=os.getcwd(),
             defaultFile="data",
             wildcard=file_choices,
-            style=wx.SAVE)
+            style=wx.FD_SAVE)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -210,7 +210,7 @@ class ScopeFrame(wx.Frame):
             defaultDir=os.getcwd(),
             defaultFile="data",
             wildcard=file_choices,
-            style=wx.SAVE)
+            style=wx.FD_SAVE)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -221,7 +221,7 @@ class ScopeFrame(wx.Frame):
             numpy.savetxt(path, out)
             self.flash_status_message("Data saved to %s" % path)
 
-            
+
     def on_exit(self, event):
         self.Destroy()
 

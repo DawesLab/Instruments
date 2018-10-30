@@ -2,6 +2,8 @@ import os
 import time
 import numpy
 
+debug = False
+
 class usbtmc:
     """Simple implementation of a USBTMC device driver, in the style of visa.h"""
 
@@ -95,8 +97,15 @@ class TekScope1000:
         # Get the length of the horizontal record
         self.write("HORIZONTAL:RECORDLENGTH?")
         time_size = int(self.read(30))
+        if(debug): print("time_array size = ",time_size)
 
-        time = numpy.arange(0,timescale*10,timescale*10/time_size*2) # For some reason the output was too short compared to the data buffer
+        #time = numpy.arange(0,timescale*10,timescale*10/time_size*2)
+
+        # not sure what the above was for, but I'm doing it with linspace now:
+        time = numpy.linspace(0,timescale*10,time_size)
+
+        if(debug): print("length of xdata = ", len(time))
+        # For some reason the output was too short compared to the data buffer
         return time
 
 

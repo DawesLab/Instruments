@@ -59,6 +59,7 @@ class MyDynamicMplCanvas(MyMplCanvas):
         timer.start(5)
         #TODO: be able to pause
         self.xdata = inst.get_xdata()
+        #print(len(self.xdata))
         self.channel = "CH1"
 
     def compute_initial_figure(self):
@@ -68,6 +69,7 @@ class MyDynamicMplCanvas(MyMplCanvas):
         # Build a list of 4 random integers between 0 and 10 (both inclusive)
         #l = [random.randint(0, 10) for i in range(4)]
         self.data = inst.get_data(self.channel)
+        #print(len(self.data))
         self.axes.plot(self.xdata, self.data, 'r')
         self.draw()
 
