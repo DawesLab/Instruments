@@ -14,14 +14,12 @@ from bokeh.plotting import figure
 
 import instrument
 
-realInstrument = False
+realInstrument = True
 # To debug away from the device. True connects for real, False uses fake data
 
 if realInstrument:
-    # Use serial tools to find the port for the coincidence counter
-    tekscopes = list(serial.tools.list_ports.grep("04b4:f232"))
-    portstring = tekscopes[0][0] # use the first one... decent assumption
-    inst = instrument.TekScope1000(portstring)
+    # TODO automagic this, can't use serial.tools
+    inst = instrument.TekScope1000('/dev/usbtmc0')
 
 # Set up data
 timedata = np.arange(50)
@@ -40,7 +38,7 @@ plot.line(x='x', y='y', source=source)
 # Set up widgets to control scale of plots
 # TODO change these to actual range sliders
 command = TextInput(title="Command Entry:", value='raw counts')
-range_slider = RangeSlider(start=-100, end=100, value=(-10,10), step=1, title="Y Scale")
+range_slider = RangeSlider(start=-10, end=10, value=(-10,10), step=0.1, title="Y Scale")
 scalemin = Slider(title="Singles Scale minimum", value=-10.0, start=-100.0, end=100.0, step=1)
 scalemax = Slider(title="Singles Scale maximum", value=10.0, start=-100.0, end=100.0, step=1)
 statsA = Paragraph(text="100", width=400, height=40)
@@ -66,9 +64,11 @@ def update_data():
     # get data:
     if realInstrument:
         data = inst.get_data("CH1")  # select channel later on
+        timedata = inst.get_xdata()
     else:
         mockdata = np.sin(0.4*np.arange(50))
         data = (random.rand(50)-0.5) + mockdata
+        timedata = np.arange(50)
 
     # statsA.text = "A: %d +/- %d" % (np.mean(a), np.std(a))
     # statsB.text = "B: %d +/- %d" % (np.mean(b), np.std(b))
@@ -80,9 +80,6 @@ def update_data():
     # b = scalemin.value
     # w = phase.value
     # k = freq.value
-
-    # Generate the new curve
-    timedata = np.arange(50) # TODO get this from the scope each time to reflect scale changes
 
     source.data = dict(x=timedata, y=data)
 
