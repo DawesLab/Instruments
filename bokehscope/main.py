@@ -11,15 +11,15 @@ from bokeh.models import ColumnDataSource, Range1d
 from bokeh.models.widgets import Slider, TextInput, Paragraph, RangeSlider
 from bokeh.plotting import figure
 
-
 import instrument
 
 realInstrument = True
-# To debug away from the device. True connects for real, False uses fake data
 
-if realInstrument:
-    # TODO automagic this, can't use serial.tools
+try:
     inst = instrument.TekScope1000('/dev/usbtmc0')
+except FileNotFoundError:
+    print("No usbtmc instrument found")
+    realInstrument = False
 
 # Set up data
 timedata = np.arange(50)
