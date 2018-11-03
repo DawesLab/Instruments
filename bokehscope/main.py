@@ -19,7 +19,7 @@ realInstrument = True
 
 if realInstrument:
     # TODO automagic this, can't use serial.tools
-    inst = instrument.TekScope1000('/dev/usbtmc0')
+    inst = instrument.TekScope1000('/dev/usbtmc1')
 
 # Set up data
 timedata = np.arange(50)
@@ -63,7 +63,7 @@ def update_data():
 
     # get data:
     if realInstrument:
-        data = inst.get_data("CH1")  # select channel later on
+        data = inst.get_data("CH2")  # select channel later on
         timedata = inst.get_xdata()
     else:
         mockdata = np.sin(0.4*np.arange(50))
@@ -103,4 +103,4 @@ countControls = widgetbox(command, range_slider)
 
 curdoc().add_root(row(countControls, plot, column(statsA, statsB), width=1400))
 curdoc().title = "Bokeh Scope"
-curdoc().add_periodic_callback(update_data, 100)
+curdoc().add_periodic_callback(update_data, 10)
