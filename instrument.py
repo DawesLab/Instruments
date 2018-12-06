@@ -52,6 +52,7 @@ class TekScope1000:
         """ Function for reading data and parsing binary into numpy array """
         self.write("CURV?")
         rawdata = self.read(9000)
+        print(rawdata)
 
         # First few bytes are characters to specify
         # the length of the transmission. Need to strip these off:
