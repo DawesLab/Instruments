@@ -250,7 +250,7 @@ class ScopeFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-    inst = instrument.TekScope1000("/dev/usbtmc0")
+    inst = instrument.TekScope1000("/dev/usbtmc1")
 
     app = wx.App(False)
     app.frame = ScopeFrame()
