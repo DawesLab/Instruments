@@ -1,38 +1,19 @@
 import os
 import time
 import numpy
+import usbtmc
+#TODO: switch to usbtmc module functions instead of file-based reads
+import pytest
 
 debug = False
 
-class usbtmc:
-    """Simple implementation of a USBTMC device driver, in the style of visa.h"""
-
-    def __init__(self, device):
-        self.device = device
-        self.FILE = os.open(device, os.O_RDWR)
-
-        # TODO: Test that the file opened
-
-    def write(self, command):
-        os.write(self.FILE, command.encode('utf-8'));
-
-    def read(self, length = 4000):
-        return os.read(self.FILE, length)
-
-    def getName(self):
-        self.write("*IDN?")
-        return self.read(300)
-
-    def sendReset(self):
-        self.write("*RST")
-
-
 class TekScope1000:
     """Class to control a Tektronix TDS1000 series oscilloscope"""
-    def __init__(self, device):
-        self.meas = usbtmc(device)
+    def __init__(self, serialno):
+        #change to self.inst?
+        self.meas = usbtmc.Instrument(0x0699,0x03ab)
 
-        self.name = self.meas.getName()
+        self.name = self.meas.ask("*IDN?")
 
         print(self.name)
 
@@ -51,8 +32,8 @@ class TekScope1000:
     def read_data(self):
         """ Function for reading data and parsing binary into numpy array """
         self.write("CURV?")
-        rawdata = self.read(9000)
-        print(rawdata)
+        rawdata = self.meas.read_raw(9000)
+        if(debug): print(rawdata)
 
         # First few bytes are characters to specify
         # the length of the transmission. Need to strip these off:
@@ -108,6 +89,9 @@ class TekScope1000:
         if(debug): print("length of xdata = ", len(time))
         # For some reason the output was too short compared to the data buffer
         return time
+
+    def test_get_data():
+        assert len(self.get_data("CH1")) == 5006
 
 
 
