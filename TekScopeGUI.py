@@ -250,7 +250,9 @@ class ScopeFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-    inst = instrument.TekScope1000("/dev/usbtmc1")
+    # upper scope is serial number C010128
+    # lower scope is serial number C010113
+    inst = instrument.TekScope1000("C010113")
 
     app = wx.App(False)
     app.frame = ScopeFrame()

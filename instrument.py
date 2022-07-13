@@ -11,7 +11,7 @@ class TekScope1000:
     """Class to control a Tektronix TDS1000 series oscilloscope"""
     def __init__(self, serialno):
         #change to self.inst?
-        self.meas = usbtmc.Instrument(0x0699,0x03ab)
+        self.meas = usbtmc.Instrument(0x0699,0x03ab,serialno)
 
         self.name = self.meas.ask("*IDN?")
 
