@@ -48,17 +48,24 @@ class ScopeFrame(wx.Frame):
         menu_file = wx.Menu()
         m_expt = menu_file.Append(-1, "&Save data to Numpy\tCtrl-S", "Save data to Numpy file")
         self.Bind(wx.EVT_MENU, self.on_save_data, m_expt)
-        m_expt = menu_file.Append(-1, "&Save data to CSV\tCtrl-Shift-S", "Save data to CSVfile")
-        self.Bind(wx.EVT_MENU, self.on_save_data_csv, m_expt)
+        m_expt_csv = menu_file.Append(-1, "&Save data to CSV\tCtrl-Shift-S", "Save data to CSVfile")
+        self.Bind(wx.EVT_MENU, self.on_save_data_csv, m_expt_csv)
         menu_file.AppendSeparator()
         m_exit = menu_file.Append(-1, "E&xit\tCtrl-X", "Exit")
         self.Bind(wx.EVT_MENU, self.on_exit, m_exit)
+
+        menu_device = wx.Menu()
+        m_device = menu_device.Append(-1, "&Select Device\tCtrl-D", "Select from multiple connected devices")
+        self.Bind(wx.EVT_MENU, self.on_device, m_device)
 
         menu_help = wx.Menu()
         m_about = menu_help.Append(-1, "&About\tF1", "About this software")
         self.Bind(wx.EVT_MENU, self.on_about, m_about)
 
+
+
         self.menubar.Append(menu_file, "&File")
+        self.menubar.Append(menu_device, "&Device")
         self.menubar.Append(menu_help, "&Help")
         self.SetMenuBar(self.menubar)
 
@@ -155,33 +162,33 @@ class ScopeFrame(wx.Frame):
         self.draw_figure()
 
     def on_ch1_button(self, event):
-        self.data = inst.get_data("CH1")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("CH1")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_ch2_button(self, event):
-        self.data = inst.get_data("CH2")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("CH2")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_ch3_button(self, event):
-        self.data = inst.get_data("CH3")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("CH3")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_ch4_button(self, event):
-        self.data = inst.get_data("CH4")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("CH4")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_refa_button(self, event):
-        self.data = inst.get_data("REFA")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("REFA")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_refb_button(self, event):
-        self.data = inst.get_data("REFB")
-        self.xdata = inst.get_xdata()
+        self.data = self.inst.get_data("REFB")
+        self.xdata = self.inst.get_xdata()
         self.draw_figure()
 
     def on_save_data(self, event):
@@ -221,6 +228,20 @@ class ScopeFrame(wx.Frame):
             numpy.savetxt(path, out)
             self.flash_status_message("Data saved to %s" % path)
 
+    def on_device(self, event):
+        msg = """ Select from multiple connected TDS1000 scopes
+        """
+        caption = "Select Device"
+        #TODO find all connected serial numbers:
+        choices=["Upper","Lower"]
+        serial_numbers=["C010128","C010113"]
+        dlg = wx.SingleChoiceDialog(self, msg, caption, choices)
+        dlg.ShowModal()
+        serialno = serial_numbers[dlg.GetSelection()]
+        if(serialno):
+            #if(self.inst): self.inst.close()
+            self.inst = instrument.TekScope1000(serialno)
+        dlg.Destroy()
 
     def on_exit(self, event):
         self.Destroy()
@@ -252,7 +273,7 @@ class ScopeFrame(wx.Frame):
 if __name__ == '__main__':
     # upper scope is serial number C010128
     # lower scope is serial number C010113
-    inst = instrument.TekScope1000("C010113")
+    #inst = instrument.TekScope1000("C010113")
 
     app = wx.App(False)
     app.frame = ScopeFrame()
